@@ -5,39 +5,60 @@ import csv
 import sys
 import socket
 
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-msgSize = int(sys.argv[1])
-counter = 0
-
-print("my rank is: %d, at node %s"%(comm.rank, socket.gethostname()))
-
 def randomBytes(n):
     return bytearray(random.getrandbits(8) for i in range(n))
 
-data = randomBytes(msgSize)
-start = MPI.Wtime();
+def measureCapacity(msgSize):
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    
+    # print("my rank is: %d, at node %s"%(comm.rank, socket.gethostname()))
+    
+    counter = 0
 
-while MPI.Wtime() < start + 1:
-	
+    if rank == 0:
+    	data = randomBytes(msgSize)
+    	start = MPI.Wtime()
+
+    while counter < 1000:
 	if rank == 0:
-		req = comm.isend(data, dest=1)
-		req.wait()
-	elif rank == 1:
-   		req = comm.irecv(None, dest=0)
-		data = req.wait()
-		counter += 1		
-   	else:
-   		print "Expected only two nodes"
-# bit/s
-capacity = counter * msgSize/8
-# Mbit/s
-capacity /= float(1000000)
+		reqS = comm.isend(data, dest=1)
+		reqS.wait()
+		reqR = comm.irecv(dest=1)
+      		received = reqR.wait()
+		counter += 1
+    	elif rank == 1:
+       		reqR = comm.irecv(dest=0)
+		received = reqR.wait()
+		reqS = comm.isend(received, dest=0)
+       		reqS.wait()
+		counter += 1
+	else:
+       		print "Expected only two nodes"
+    
+		
+    if rank == 0:
+	stop = MPI.Wtime()
+	time = stop - start
 
-if rank==1:	
-	with open('capacityResults.csv', 'a') as csvfile:
-		writer = csv.writer(csvfile, delimiter=',',
-                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
-		writer.writerow(['nonblocking',msgSize,str(counter)])
-	print ("executed: %d times"%(counter))
-	print ("capacity: %f Mbit/s"%(capacity))
+	processedBitsOneWay = counter * msgSize * 8 * 2
+	# bits/s
+	capacity = processedBitsOneWay/time
+	# Mbit/s
+	capacity /= float(1000000)
+    	with open('capacityNonblockingNoSHM.csv', 'a') as csvfile:
+    		writer = csv.writer(csvfile, delimiter=',',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    		writer.writerow(['nonblocking','1nodeNoSHM',msgSize,capacity])
+    	print ("msgSize: %d - capacity: %f Mbit/s"%(msgSize,capacity))
+
+
+
+def main():
+    n = 100
+    while n < 10000:    
+	measureCapacity(n)
+	n += 100
+
+if __name__ == "__main__":
+    main()
