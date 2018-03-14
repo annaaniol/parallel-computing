@@ -1,0 +1,37 @@
+set terminal svg
+set datafile separator ','
+
+set xlabel "Message size [B]"
+set ylabel "Capacity [Mbit/s]"
+
+set title "Capacity: Nonblocking communication"
+set output 'gnuplot/capacity/nonblocking.svg'
+
+plot "results/capacity/oneNodeNonblocking.csv" using 3:4 with lines title "one node (04)", \
+     "results/capacity/twoNodesDifferentHostNonblocking.csv" using 3:4 with lines title "two nodes, same host (02, 03)", \
+     "results/capacity/twoNodesSameHostNonblocking.csv" using 3:4 with lines title "two nodes, different host (08, 09)"
+
+set title "Capacity: Blocking communication"
+set output 'gnuplot/capacity/blocking.svg'
+
+plot "results/capacity/oneNodeBlocking.csv" using 3:4 with lines title "one node (04)", \
+     "results/capacity/twoNodesDifferentHostBlocking.csv" using 3:4 with lines title "two nodes, same host (02, 03)", \
+     "results/capacity/twoNodesSameHostBlocking.csv" using 3:4 with lines title "two nodes, different host (08, 09)"
+
+set title "Capacity: two nodes, different host"
+set output 'gnuplot/capacity/twoNodesDifferentHost.svg'
+
+plot "results/capacity/twoNodesDifferentHostBlocking.csv" using 3:4 with lines title "blocking", \
+     "results/capacity/twoNodesDifferentHostNonblocking.csv" using 3:4 with lines title "nonblocking"
+
+set title "Capacity: two nodes, same host"
+set output 'gnuplot/capacity/twoNodesSameHost.svg'
+
+plot "results/capacity/twoNodesSameHostBlocking.csv" using 3:4 with lines title "blocking", \
+     "results/capacity/twoNodesSameHostNonblocking.csv" using 3:4 with lines title "nonblocking"
+
+set title "Capacity: one node"
+set output 'gnuplot/capacity/oneNode.svg'
+
+plot "results/capacity/oneNodeBlocking.csv" using 3:4 with lines title "blocking", \
+     "results/capacity/oneNodeNonblocking.csv" using 3:4 with lines title "nonblocking"

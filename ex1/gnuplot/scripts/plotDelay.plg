@@ -1,0 +1,37 @@
+set terminal svg
+set datafile separator ','
+
+set xlabel "Package number"
+set ylabel "Delay [ms]"
+
+set title "Delay: Nonblocking communication"
+set output 'gnuplot/delay/nonblocking.svg'
+
+plot "results/delay/oneNodeNonblocking.csv" using 3:4 with lines title "one node (04)", \
+     "results/delay/twoNodesDifferentHostNonblocking.csv" using 3:4 with lines title "two nodes, same host (02, 03)", \
+     "results/delay/twoNodesSameHostNonblocking.csv" using 3:4 with lines title "two nodes, different host (08, 09)"
+
+set title "Delay: Blocking communication"
+set output 'gnuplot/delay/blocking.svg'
+
+plot "results/delay/oneNodeBlocking.csv" using 3:4 with lines title "one node (04)", \
+     "results/delay/twoNodesDifferentHostBlocking.csv" using 3:4 with lines title "two nodes, same host (02, 03)", \
+     "results/delay/twoNodesSameHostBlocking.csv" using 3:4 with lines title "two nodes, different host (08, 09)"
+
+set title "Delay: two nodes, different host"
+set output 'gnuplot/delay/twoNodesDifferentHost.svg'
+
+plot "results/delay/twoNodesDifferentHostBlocking.csv" using 3:4 with lines title "blocking", \
+     "results/delay/twoNodesDifferentHostNonblocking.csv" using 3:4 with lines title "nonblocking"
+
+set title "Delay: two nodes, same host"
+set output 'gnuplot/delay/twoNodesSameHost.svg'
+
+plot "results/delay/twoNodesSameHostBlocking.csv" using 3:4 with lines title "blocking", \
+     "results/delay/twoNodesSameHostNonblocking.csv" using 3:4 with lines title "nonblocking"
+
+set title "Delay: one node"
+set output 'gnuplot/delay/oneNode.svg'
+
+plot "results/delay/oneNodeBlocking.csv" using 3:4 with lines title "blocking", \
+     "results/delay/oneNodeNonblocking.csv" using 3:4 with lines title "nonblocking"

@@ -1,0 +1,9 @@
+set terminal svg
+set output outputname
+set datafile separator ','
+
+set title titlename
+set xlabel xlabelname
+set ylabel ylabelname
+
+plot datafile using 3:4 with points pointtype 5

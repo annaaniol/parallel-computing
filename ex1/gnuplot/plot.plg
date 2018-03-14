@@ -1,9 +1,0 @@
-set terminal svg
-set output outputname
-set datafile separator ','
-
-set title titlename
-set xlabel "Package number"
-set ylabel "Delay [ms]"
-
-plot datafile using 3:4 with lines
