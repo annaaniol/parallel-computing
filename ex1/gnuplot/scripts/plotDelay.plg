@@ -15,8 +15,8 @@ set title "Delay: Blocking communication"
 set output 'gnuplot/delay/blocking.svg'
 
 plot "results/delay/oneNodeBlocking.csv" using 3:4 with lines title "one node (04)", \
-     "results/delay/twoNodesDifferentHostBlocking.csv" using 3:4 with lines title "two nodes, same host (02, 03)", \
-     "results/delay/twoNodesSameHostBlocking.csv" using 3:4 with lines title "two nodes, different host (08, 09)"
+     "results/delay/twoNodesSameHostBlocking.csv" using 3:4 with lines title "two nodes, same host (02, 03)", \
+     "results/delay/twoNodesDifferentHostBlocking.csv" using 3:4 with lines title "two nodes, different host (08, 09)"
 
 set title "Delay: two nodes, different host"
 set output 'gnuplot/delay/twoNodesDifferentHost.svg'
