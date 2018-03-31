@@ -10,15 +10,15 @@ def in_circle(x, y):
 		return False
 
 def count_hits(number_of_points):
-    number_of_hits = 0
+	number_of_hits = 0
 
-    for counter in range (0, number_of_points):
-        x = random.uniform(0,1)
-        y = random.uniform(0,1)
-        if in_circle(x,y):
-            number_of_hits += 1
+	for counter in range (0, number_of_points):
+		x = random.uniform(0,1)
+		y = random.uniform(0,1)
+		if in_circle(x,y):
+			number_of_hits += 1
 
-    return number_of_hits
+	return number_of_hits
 
 def count_pi(points_in_total):
 	start_time = time.time()
@@ -29,8 +29,8 @@ def count_pi(points_in_total):
 	print(total_time)
 
 def main():
-    points_in_total = int(sys.argv[1])
-    count_pi(points_in_total)
+	points_in_total = int(sys.argv[1])
+	count_pi(points_in_total)
 
 if __name__ == "__main__":
-    main()
+	main()
