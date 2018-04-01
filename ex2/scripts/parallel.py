@@ -7,22 +7,16 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-def print_result(pi, time, type, size, points):
-	print(str(pi)+','+str(time)+','+type+','+str(size)+','+str(points))
-
-def in_circle(x, y):
-	if (x*x+y*y) <= 1:
-		return True
-	else:
-		return False
+def print_result(pi, time, processors, points):
+	print(str(pi)+','+str(time)+','+str(processors)+','+str(points))
 
 def count_hits(number_of_points):
 	number_of_hits = 0
 
-	for counter in range (0, number_of_points):
+	for counter in xrange(0, number_of_points):
 		x = random.uniform(0,1)
 		y = random.uniform(0,1)
-		if in_circle(x,y):
+		if (x*x+y*y) <= 1:	#  in circle
 			number_of_hits += 1
 
 	return number_of_hits
@@ -39,7 +33,6 @@ def count_pi(type, points):
 
 	hits = count_hits(points_in_total/size)
 	all_hits = comm.gather(hits, root=0)
-	comm.barrier()
 
 	if rank == 0:
 		end = MPI.Wtime()
@@ -48,11 +41,7 @@ def count_pi(type, points):
 			all_hits_count += h
 		pi = 4*float(all_hits_count)/float(points_in_total)
 		time = end - start
-		if type == 'scalable':
-			print_result(pi, time, 'scalable', size, points)
-		else:
-			print_result(pi, time, 'nonscalable', size, points_in_total)
-
+		print_result(pi, time, size, points)
 
 def main():
 	type = sys.argv[1]
